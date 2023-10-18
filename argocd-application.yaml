@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: django-app
+spec:
+  destination:
+    namespace: default
+    server: https://kubernetes.default.svc
+  source:
+    repoURL: <your-repo-url>
+    targetRevision: HEAD
+    path: /path/to/helm/chart
+    helm:
+      valueFiles:
+        - values.yaml
+      values:
+        - name: django.image.repository
+          value: your-django-app-image
+        - name: django.image.tag
+          value: 1.0
+        # Define other values as needed
+  syncPolicy:
+    automated:
+      prune: true
+    syncOptions:
+      - CreateNamespace=true
